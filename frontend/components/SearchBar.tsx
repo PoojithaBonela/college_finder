@@ -11,7 +11,11 @@ interface College {
   city: string;
 }
 
-export default function SearchBar() {
+interface SearchBarProps {
+  onSelect?: (college: College) => void;
+}
+
+export default function SearchBar({ onSelect }: SearchBarProps = {}) {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState<College[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -59,12 +63,18 @@ export default function SearchBar() {
   const handleSelect = (college: College) => {
     setShowDropdown(false);
     setQuery("");
-    router.push(`/explore?search=${college.name}`);
+    if (onSelect) {
+      onSelect(college);
+    } else {
+      router.push(`/explore?search=${college.name}`);
+    }
   };
 
   const handleViewAll = () => {
     setShowDropdown(false);
-    router.push(`/explore?search=${query}`);
+    if (!onSelect) {
+      router.push(`/explore?search=${query}`);
+    }
   };
 
   return (

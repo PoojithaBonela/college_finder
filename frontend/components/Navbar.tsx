@@ -4,10 +4,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import SearchBar from "./SearchBar";
+import { useComparison } from "@/context/ComparisonContext";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { addCollege } = useComparison();
+
+  const isComparisonPage = pathname === "/comparison";
 
   const navLinks = [
     { href: "/comparison", label: "Compare" },
@@ -38,7 +42,7 @@ export default function Navbar() {
 
           {/* ── CENTER: Search (desktop) ── */}
           <div className="hidden lg:flex flex-1 max-w-xl">
-            <SearchBar />
+            <SearchBar onSelect={isComparisonPage ? addCollege : undefined} />
           </div>
 
           {/* ── RIGHT: Nav links + Auth (desktop) ── */}
