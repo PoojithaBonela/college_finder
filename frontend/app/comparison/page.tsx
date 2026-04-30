@@ -64,9 +64,18 @@ function formatFees(perYearValue: any) {
 export default function ComparisonPage() {
   const { selectedColleges, removeCollege } = useComparison();
   const tableRef = useRef<HTMLDivElement>(null);
+  const [showTable, setShowTable] = React.useState(false);
+
+  // Reset table if selections change
+  React.useEffect(() => {
+    setShowTable(false);
+  }, [selectedColleges.length]);
 
   const handleCompareNow = () => {
-    tableRef.current?.scrollIntoView({ behavior: "smooth" });
+    setShowTable(true);
+    setTimeout(() => {
+      tableRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
   };
 
   // Best values calculations
@@ -196,21 +205,21 @@ export default function ComparisonPage() {
       </section>
 
       {/* Comparison Table */}
-      {selectedColleges.length >= 2 && (
+      {selectedColleges.length >= 2 && showTable && (
         <section ref={tableRef} className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 scroll-mt-24">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-in fade-in slide-in-from-bottom-8 duration-500 overflow-x-auto">
-            <div className="min-w-[800px]">
-              <table className="w-full text-left border-collapse table-fixed">
-                <thead className="bg-white z-20 shadow-sm relative">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-in fade-in slide-in-from-bottom-8 duration-500 relative">
+            <div className="overflow-x-auto scrollbar-hide">
+              <table className="w-full text-left border-collapse min-w-[600px] md:min-w-full">
+                <thead className="bg-white sticky top-0 z-30 shadow-sm">
                   <tr>
-                    <th className="p-6 bg-gray-50/80 backdrop-blur border-b border-r border-gray-200 w-1/4 font-semibold text-gray-500 uppercase tracking-wider text-xs">
+                    <th className="p-4 md:p-6 bg-gray-50/90 backdrop-blur border-b border-r border-gray-200 w-[140px] md:w-1/4 font-semibold text-gray-500 uppercase tracking-wider text-[10px] md:text-xs sticky left-0 z-40">
                       Feature
                     </th>
                     {selectedColleges.map((college, idx) => (
-                      <th key={college.id} className="p-6 bg-white border-b border-gray-200 align-top" style={{ width: `${75 / selectedColleges.length}%` }}>
+                      <th key={college.id} className="p-4 md:p-6 bg-white border-b border-gray-200 align-top">
                         <div className="flex flex-col">
-                          <h4 className="text-lg font-bold text-gray-900 line-clamp-2 leading-tight">{college.name}</h4>
-                          <span className="text-sm font-medium text-[#2A73CC] mt-1">College {idx + 1}</span>
+                          <h4 className="text-sm md:text-lg font-bold text-gray-900 line-clamp-2 leading-tight">{college.name}</h4>
+                          <span className="text-[10px] md:text-sm font-medium text-[#2A73CC] mt-1">College {idx + 1}</span>
                         </div>
                       </th>
                     ))}
@@ -220,7 +229,7 @@ export default function ComparisonPage() {
                   
                   {/* Section 1: Basic Info */}
                   <tr>
-                    <td colSpan={selectedColleges.length + 1} className="bg-gray-50 px-6 py-3 font-semibold text-gray-900 border-b border-gray-200 border-r-0">
+                    <td colSpan={selectedColleges.length + 1} className="bg-gray-50 px-4 md:px-6 py-3 font-semibold text-gray-900 border-b border-gray-200 sticky left-0 z-20">
                       <div className="flex items-center gap-2">
                         <Info className="w-4 h-4 text-[#2A73CC]" />
                         Basic Info
@@ -228,33 +237,33 @@ export default function ComparisonPage() {
                     </td>
                   </tr>
                   <tr className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-6 py-5 font-medium text-gray-500 border-r border-gray-100 bg-white">College Type</td>
+                    <td className="px-4 md:px-6 py-4 md:py-5 font-medium text-gray-500 border-r border-gray-100 bg-white sticky left-0 z-20 text-xs md:text-sm">College Type</td>
                     {selectedColleges.map((c) => (
-                      <td key={c.id} className="px-6 py-5 text-gray-900">{renderFallback(c.college_type)}</td>
+                      <td key={c.id} className="px-4 md:px-6 py-4 md:py-5 text-gray-900 text-xs md:text-sm">{renderFallback(c.college_type)}</td>
                     ))}
                   </tr>
                   <tr className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-6 py-5 font-medium text-gray-500 border-r border-gray-100 bg-white">Location (State)</td>
+                    <td className="px-4 md:px-6 py-4 md:py-5 font-medium text-gray-500 border-r border-gray-100 bg-white sticky left-0 z-20 text-xs md:text-sm">Location</td>
                     {selectedColleges.map((c) => (
-                      <td key={c.id} className="px-6 py-5 text-gray-900">{renderFallback(c.location)}</td>
+                      <td key={c.id} className="px-4 md:px-6 py-4 md:py-5 text-gray-900 text-xs md:text-sm">{renderFallback(c.location)}</td>
                     ))}
                   </tr>
                   <tr className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-6 py-5 font-medium text-gray-500 border-r border-gray-100 bg-white">City</td>
+                    <td className="px-4 md:px-6 py-4 md:py-5 font-medium text-gray-500 border-r border-gray-100 bg-white sticky left-0 z-20 text-xs md:text-sm">City</td>
                     {selectedColleges.map((c) => (
-                      <td key={c.id} className="px-6 py-5 text-gray-900">{renderFallback(c.city)}</td>
+                      <td key={c.id} className="px-4 md:px-6 py-4 md:py-5 text-gray-900 text-xs md:text-sm">{renderFallback(c.city)}</td>
                     ))}
                   </tr>
                   <tr className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-6 py-5 font-medium text-gray-500 border-r border-gray-100 bg-white">Established Year</td>
+                    <td className="px-4 md:px-6 py-4 md:py-5 font-medium text-gray-500 border-r border-gray-100 bg-white sticky left-0 z-20 text-xs md:text-sm whitespace-nowrap">Est. Year</td>
                     {selectedColleges.map((c) => (
-                      <td key={c.id} className="px-6 py-5 text-gray-900">{renderFallback(c.established_year)}</td>
+                      <td key={c.id} className="px-4 md:px-6 py-4 md:py-5 text-gray-900 text-xs md:text-sm">{renderFallback(c.established_year)}</td>
                     ))}
                   </tr>
 
                   {/* Section 2: Rankings & Ratings */}
                   <tr>
-                    <td colSpan={selectedColleges.length + 1} className="bg-gray-50 px-6 py-3 font-semibold text-gray-900 border-b border-t border-gray-200 border-r-0">
+                    <td colSpan={selectedColleges.length + 1} className="bg-gray-50 px-4 md:px-6 py-3 font-semibold text-gray-900 border-b border-t border-gray-200 sticky left-0 z-20">
                       <div className="flex items-center gap-2">
                         <Award className="w-4 h-4 text-[#2A73CC]" />
                         Rankings & Ratings
@@ -262,20 +271,20 @@ export default function ComparisonPage() {
                     </td>
                   </tr>
                   <tr className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-6 py-5 font-medium text-gray-500 border-r border-gray-100 bg-white">NIRF Rank</td>
+                    <td className="px-4 md:px-6 py-4 md:py-5 font-medium text-gray-500 border-r border-gray-100 bg-white sticky left-0 z-20 text-xs md:text-sm">NIRF Rank</td>
                     {selectedColleges.map((c) => (
-                      <td key={c.id} className="p-3 align-top">
-                        <div className={`px-4 py-3 rounded-xl h-full flex items-center transition-colors ${getHighlightClass('nirf', c.nirf_rank)}`}>
+                      <td key={c.id} className="p-2 md:p-3 align-top">
+                        <div className={`px-3 md:px-4 py-2 md:py-3 rounded-xl h-full flex items-center transition-colors text-xs md:text-sm ${getHighlightClass('nirf', c.nirf_rank)}`}>
                            {renderFallback(c.nirf_rank)}
                         </div>
                       </td>
                     ))}
                   </tr>
                   <tr className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-6 py-5 font-medium text-gray-500 border-r border-gray-100 bg-white">Rating</td>
+                    <td className="px-4 md:px-6 py-4 md:py-5 font-medium text-gray-500 border-r border-gray-100 bg-white sticky left-0 z-20 text-xs md:text-sm">Rating</td>
                     {selectedColleges.map((c) => (
-                      <td key={c.id} className="p-3 align-top">
-                        <div className={`px-4 py-3 rounded-xl h-full flex items-center transition-colors ${getHighlightClass('rating', c.rating)}`}>
+                      <td key={c.id} className="p-2 md:p-3 align-top">
+                        <div className={`px-3 md:px-4 py-2 md:py-3 rounded-xl h-full flex items-center transition-colors text-xs md:text-sm ${getHighlightClass('rating', c.rating)}`}>
                            {c.rating ? `${c.rating} / 5` : renderFallback(c.rating)}
                         </div>
                       </td>
@@ -284,7 +293,7 @@ export default function ComparisonPage() {
 
                   {/* Section 3: Fees & Placement */}
                   <tr>
-                    <td colSpan={selectedColleges.length + 1} className="bg-gray-50 px-6 py-3 font-semibold text-gray-900 border-b border-t border-gray-200 border-r-0">
+                    <td colSpan={selectedColleges.length + 1} className="bg-gray-50 px-4 md:px-6 py-3 font-semibold text-gray-900 border-b border-t border-gray-200 sticky left-0 z-20">
                       <div className="flex items-center gap-2">
                         <Briefcase className="w-4 h-4 text-[#2A73CC]" />
                         Fees & Placement
@@ -292,15 +301,15 @@ export default function ComparisonPage() {
                     </td>
                   </tr>
                   <tr className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-6 py-5 font-medium text-gray-500 border-r border-gray-100 bg-white">Tuition Fees</td>
+                    <td className="px-4 md:px-6 py-4 md:py-5 font-medium text-gray-500 border-r border-gray-100 bg-white sticky left-0 z-20 text-xs md:text-sm">Tuition Fees</td>
                     {selectedColleges.map((c) => {
                       const fees = formatFees(c.fees);
                       return (
-                        <td key={c.id} className="px-6 py-5">
+                        <td key={c.id} className="px-4 md:px-6 py-4 md:py-5 text-xs md:text-sm">
                           {fees ? (
                             <div className="flex flex-col gap-0.5">
                               <span className="text-gray-900 font-bold">{fees.perYear}</span>
-                              <span className="text-xs text-gray-400 font-medium">{fees.total}</span>
+                              <span className="text-[10px] md:text-xs text-gray-400 font-medium">{fees.total}</span>
                             </div>
                           ) : (
                             renderFallback(c.fees)
@@ -310,19 +319,19 @@ export default function ComparisonPage() {
                     })}
                   </tr>
                   <tr className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-6 py-5 font-medium text-gray-500 border-r border-gray-100 bg-white">Avg Package</td>
+                    <td className="px-4 md:px-6 py-4 md:py-5 font-medium text-gray-500 border-r border-gray-100 bg-white sticky left-0 z-20 text-xs md:text-sm whitespace-nowrap">Avg Package</td>
                     {selectedColleges.map((c) => (
-                      <td key={c.id} className="p-3 align-top">
-                        <div className={`px-4 py-2 rounded-full inline-flex items-center transition-colors text-sm font-bold ${getHighlightClass('package', c.avg_package)}`}>
+                      <td key={c.id} className="p-2 md:p-3 align-top">
+                        <div className={`px-3 md:px-4 py-1.5 md:py-2 rounded-full inline-flex items-center transition-colors text-[10px] md:text-sm font-bold ${getHighlightClass('package', c.avg_package)}`}>
                            {c.avg_package ? formatCurrency(parsePackage(c.avg_package), true) : renderFallback(c.avg_package)}
                         </div>
                       </td>
                     ))}
                   </tr>
                   <tr className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-6 py-5 font-medium text-gray-500 border-r border-gray-100 bg-white">Placement Rate</td>
+                    <td className="px-4 md:px-6 py-4 md:py-5 font-medium text-gray-500 border-r border-gray-100 bg-white sticky left-0 z-20 text-xs md:text-sm whitespace-nowrap">Placement Rate</td>
                     {selectedColleges.map((c) => (
-                      <td key={c.id} className="px-6 py-5 text-gray-900 font-semibold">
+                      <td key={c.id} className="px-4 md:px-6 py-4 md:py-5 text-gray-900 font-semibold text-xs md:text-sm">
                         {c.placement_percentage ? `${c.placement_percentage}%` : renderFallback(c.placement_percentage)}
                       </td>
                     ))}
@@ -330,7 +339,7 @@ export default function ComparisonPage() {
 
                   {/* Section 4: Academics */}
                   <tr>
-                    <td colSpan={selectedColleges.length + 1} className="bg-gray-50 px-6 py-3 font-semibold text-gray-900 border-b border-t border-gray-200 border-r-0">
+                    <td colSpan={selectedColleges.length + 1} className="bg-gray-50 px-4 md:px-6 py-3 font-semibold text-gray-900 border-b border-t border-gray-200 sticky left-0 z-20">
                       <div className="flex items-center gap-2">
                         <GraduationCap className="w-4 h-4 text-[#2A73CC]" />
                         Academics
@@ -338,14 +347,14 @@ export default function ComparisonPage() {
                     </td>
                   </tr>
                   <tr className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-6 py-5 font-medium text-gray-500 border-r border-gray-100 bg-white align-top">Courses</td>
+                    <td className="px-4 md:px-6 py-4 md:py-5 font-medium text-gray-500 border-r border-gray-100 bg-white align-top sticky left-0 z-20 text-xs md:text-sm">Courses</td>
                     {selectedColleges.map((c) => (
-                      <td key={c.id} className="px-6 py-5 text-gray-900 leading-relaxed align-top">
+                      <td key={c.id} className="px-4 md:px-6 py-4 md:py-5 text-gray-900 leading-relaxed align-top text-xs md:text-sm">
                         {c.courses ? (
-                          <ul className="space-y-1.5">
+                          <ul className="space-y-1 md:space-y-1.5">
                             {c.courses.split(",").map((course, i) => (
-                              <li key={i} className="flex items-center gap-2 text-sm">
-                                <div className="w-1.5 h-1.5 rounded-full bg-[#2A73CC] flex-shrink-0" />
+                              <li key={i} className="flex items-center gap-1.5 md:gap-2">
+                                <div className="w-1 md:w-1.5 h-1 md:h-1.5 rounded-full bg-[#2A73CC] flex-shrink-0" />
                                 {course.trim()}
                               </li>
                             ))}

@@ -37,10 +37,10 @@ export default function FilterBar({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
         
         {/* ── Filters + Sort Row ── */}
-        <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           
           {/* Filters Group */}
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             {/* Custom Location Dropdown */}
             <LocationDropdown 
               selectedValue={selectedFilters.Location} 
@@ -60,15 +60,17 @@ export default function FilterBar({
           </div>
 
           {/* Sort + Clear Group ── */}
-          <div className="flex items-center gap-4 ml-auto">
-            <SortDropdown 
-              selectedValue={selectedSort} 
-              onSelect={onSortChange} 
-            />
+          <div className="flex items-center justify-start lg:justify-end gap-4 w-full lg:w-auto pt-2 lg:pt-0 border-t lg:border-t-0 border-gray-100 lg:ml-auto">
+            <div className="lg:flex-none">
+              <SortDropdown 
+                selectedValue={selectedSort} 
+                onSelect={onSortChange} 
+              />
+            </div>
             
             <button 
               onClick={onClearAll}
-              className="flex items-center text-sm font-medium text-gray-400 hover:text-gray-600 transition-all"
+              className="flex items-center text-sm font-medium text-gray-400 hover:text-gray-600 transition-all whitespace-nowrap ml-auto lg:ml-0"
             >
               <X className="mr-1 h-4 w-4" />
               Clear

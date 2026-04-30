@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Search, MapPin, ArrowRight } from "lucide-react";
 import { API_BASE_URL } from "@/utils/api";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 interface College {
   id: number | string;
@@ -22,6 +22,8 @@ export default function SearchBar({ onSelect }: SearchBarProps = {}) {
   const [loading, setLoading] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const pathname = usePathname();
+  const isComparisonPage = pathname === "/comparison";
 
   // Debounced API call
   useEffect(() => {
@@ -130,13 +132,15 @@ export default function SearchBar({ onSelect }: SearchBarProps = {}) {
                 ))}
                 
                 {/* View All Results */}
-                <button
-                  onClick={handleViewAll}
-                  className="w-full text-left px-4 py-3 border-t border-gray-50 bg-gray-50/50 hover:bg-blue-50 flex items-center justify-between group transition-colors"
-                >
-                  <span className="text-sm font-bold text-[#2A73CC]">View all results for "{query}"</span>
-                  <ArrowRight className="h-4 w-4 text-[#2A73CC] transform group-hover:translate-x-1 transition-transform" />
-                </button>
+                {!isComparisonPage && (
+                  <button
+                    onClick={handleViewAll}
+                    className="w-full text-left px-4 py-3 border-t border-gray-50 bg-gray-50/50 hover:bg-blue-50 flex items-center justify-between group transition-colors"
+                  >
+                    <span className="text-sm font-bold text-[#2A73CC]">View all results for "{query}"</span>
+                    <ArrowRight className="h-4 w-4 text-[#2A73CC] transform group-hover:translate-x-1 transition-transform" />
+                  </button>
+                )}
               </>
             ) : !loading ? (
               <div className="px-4 py-6 text-center text-gray-500 text-sm">
